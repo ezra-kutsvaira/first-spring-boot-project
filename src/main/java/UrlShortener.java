@@ -30,4 +30,21 @@ public class UrlShortener {
     public String getOriginalUrl(String shortenedURL) {
         return urlStore.get(shortenedURL);
     }
+    //Method to generate the QR code
+     public String generateQRCode (String shortenedURL, String filePath){
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        int width = 200;//width of the QR code
+        int height = 200; // height of the QR code
+        try {
+            BitMatrix bitMatrix = qrCodeWriter.encode(shortenedURL,BarcodeFormat.QR_CODE, width,height);
+            Path path = FileSystems.getDefault().getPath(filePath);
+            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path); // Write QR code to a file
+
+            return "QR Code saved to: " + filePath;
+        }catch (WriterException | IOException e) {
+            e.printStackTrace();
+            return "Error generating QR Code: " + e.getMessage();
+        }
+    }
+
 }
